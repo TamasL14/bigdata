@@ -12,7 +12,7 @@ jobs:
             PROJECT_ID: bigdata-412310
         steps:
         -   name: Checkout
-            uses: actions/checkout@v3
+            uses: actions/checkout@v4
 
         -   id: 'auth'
             name: 'Authenticate to Google Cloud'
@@ -23,9 +23,7 @@ jobs:
 
         -   uses: google-github-actions/setup-gcloud@v2
             with:
-                service_account_key: ${{ secrets.SERVICE_ACCOUNT_KEY}}
                 project_id: ${{ env.PROJECT_ID}}
-                export_default_credentials: true
                 
         -   name: Build Docker Image
             run: docker build -t $IMAGE_NAME:latest .
