@@ -9,7 +9,7 @@ jobs:
         runs-on: ubuntu-latest
         env: 
             IMAGE_NAME: bigdata
-            POJECT_ID: bigdata-412310
+            PROJECT_ID: bigdata-412310
         steps:
         -   name: Checkout
             uses: actions/checkout@v2
