@@ -33,14 +33,14 @@ jobs:
         -   name: Configure Docker Client
             run: |-
                 gcloud auth configure-docker --quiet
-                gcloud auth configure-docker europe-west3-docker.pkg.dev --quite
+                gcloud auth configure-docker europe-west3-docker.pkg.dev --quiet
 
         -   name: Push Docker Image to Container Registry (GCR)
             run: |-
                     docker tag $IMAGE_NAME:latest gcr.io/$PROJECT_ID/$IMAGE_NAME:latest
                     docker push gcr.io/$PROJECT_ID/$IMAGE_NAME:latest
                     
-        -   name: Push Docker Image to Container Registry (GCR)
+        -   name: Push Docker Image to Artifact Registry
             run: |-
                     docker tag $IMAGE_NAME:latest europe-west3-docker.pkg.dev/$PROJECT_ID/$IMAGE_NAME:latest
                     docker push europe-west3-docker.pkg.dev/$PROJECT_ID/$IMAGE_NAME:latest
