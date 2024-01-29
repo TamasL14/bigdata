@@ -10,7 +10,7 @@ COPY . .
 
 EXPOSE 8080
 
-ENV PORT 80
+ENV PORT 8080
 
 CMD ["python","-m","flask","run","--host","0.0.0.0"]
 
