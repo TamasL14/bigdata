@@ -3,7 +3,7 @@ from pymongo import MongoClient
 
 app = FastAPI()
 
-MONGO_URL = "mongodb+srv://dbUserBigData:Aa017jHP0ZuWv4Z2@rosentestdata.ky0vl7x.mongodb.net/?retryWrites=true&w=majority"
+MONGO_URL = "mongodb+srv://dbUserBigData:Aa017jHP0ZuWv4Z2@rosentestdata.ky0vl7x.mongodb.net/?retryWrites=true&w=majority&tlsCAFile=isrgrootx1.pem"
 client = MongoClient(MONGO_URL)
 
 @app.get("/health")
