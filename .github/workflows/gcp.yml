@@ -7,6 +7,9 @@ jobs:
     deploy:
         name: Build and Push to GCP
         runs-on: ubuntu-latest
+        permissions:
+            contents: 'read'
+            id-token: 'write'
         env: 
             IMAGE_NAME: bigdata
             PROJECT_ID: bigdata-412310
@@ -20,7 +23,6 @@ jobs:
             with:
                 credentials_json: ${{ secrets.SERVICE_ACCOUNT_KEY }}
 
-
         -   uses: google-github-actions/setup-gcloud@v2
             with:
                 project_id: ${{ env.PROJECT_ID}}
@@ -28,7 +30,7 @@ jobs:
         -   name: 'Set up Cloud SDK'
             uses: 'google-github-actions/setup-gcloud@v1'
             
-        -   name: build and push the docker image
+        -   name: Build and Push the docker image
             run: |
                 gcloud auth configure-docker europe-west3-docker.pkg.dev --quiet
                 docker build -t europe-west3-docker.pkg.dev/$PROJECT_ID/images/$IMAGE_NAME:latest --build-arg DEV_MODE=False .
