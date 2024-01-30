@@ -1,4 +1,4 @@
-FROM python:3.9-slim
+FROM python:3.10-slim
 
 WORKDIR /app
 
@@ -8,7 +8,5 @@ RUN pip install -r requirements.txt
 
 COPY . .
 
-EXPOSE 8080
-
-CMD ["python","flask","run","app.py","--host","0.0.0.0", "$PORT"]
+CMD ["python","flask","run","app.py","--host","0.0.0.0", "--port","8080"]
 

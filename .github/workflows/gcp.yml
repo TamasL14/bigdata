@@ -32,13 +32,18 @@ jobs:
             run: |-
                 gcloud auth configure-docker --quiet
                 gcloud auth configure-docker europe-west3-docker.pkg.dev --quiet
-
-        -   name: Push Docker Image to Container Registry (GCR)
-            run: |-
-                    docker tag $IMAGE_NAME:latest gcr.io/$PROJECT_ID/$IMAGE_NAME:latest
-                    docker push gcr.io/$PROJECT_ID/$IMAGE_NAME:latest
                     
         -   name: Push Docker Image to Artifact Registry
             run: |-
                     docker tag $IMAGE_NAME:latest europe-west3-docker.pkg.dev/$PROJECT_ID/images/$IMAGE_NAME:latest
                     docker push europe-west3-docker.pkg.dev/$PROJECT_ID/images/$IMAGE_NAME:latest
+
+                    - name: 'Set up Cloud SDK'
+                    uses: 'google-github-actions/setup-gcloud@v1'
+            
+        -   name: build and push the docker image
+            run: |
+                gcloud auth configure-docker europe-west4-docker.pkg.dev
+                docker build -t europe-west3-docker.pkg.dev/$PROJECT_ID/bigdata/app:latest --build-arg DEV_MODE=False .
+                docker push europe-west3-docker.pkg.dev/$PROJECT_ID/bigdata/app:latest
+                gcloud run services update app --image europe-west3-docker.pkg.dev/$PROJECT_ID/bigdata/app:latest --region europe-west3
