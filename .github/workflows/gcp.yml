@@ -1,10 +1,10 @@
----
 name: Build and Push Python Image into GCP
+
 on:
     push:
         branches: [main]
 jobs:
-    build-push-gcr:
+    deploy:
         name: Build and Push to GCP
         runs-on: ubuntu-latest
         env: 
@@ -24,26 +24,13 @@ jobs:
         -   uses: google-github-actions/setup-gcloud@v2
             with:
                 project_id: ${{ env.PROJECT_ID}}
-                
-        -   name: Build Docker Image
-            run: docker buildx build --platform linux/amd64 -t $IMAGE_NAME:latest .
-
-        -   name: Configure Docker Client
-            run: |-
-                gcloud auth configure-docker --quiet
-                gcloud auth configure-docker europe-west3-docker.pkg.dev --quiet
-                    
-        -   name: Push Docker Image to Artifact Registry
-            run: |-
-                    docker tag $IMAGE_NAME:latest europe-west3-docker.pkg.dev/$PROJECT_ID/images/$IMAGE_NAME:latest
-                    docker push europe-west3-docker.pkg.dev/$PROJECT_ID/images/$IMAGE_NAME:latest
 
         -   name: 'Set up Cloud SDK'
             uses: 'google-github-actions/setup-gcloud@v1'
             
         -   name: build and push the docker image
             run: |
-                gcloud auth configure-docker europe-west3-docker.pkg.dev
+                gcloud auth configure-docker europe-west3-docker.pkg.dev --quiet
                 docker build -t europe-west3-docker.pkg.dev/$PROJECT_ID/images/$IMAGE_NAME:latest --build-arg DEV_MODE=False .
                 docker push europe-west3-docker.pkg.dev/$PROJECT_ID/images/$IMAGE_NAME:latest
                 gcloud run services update app --image europe-west3-docker.pkg.dev/$PROJECT_ID/images/$IMAGE_NAME:latest --region europe-west3
