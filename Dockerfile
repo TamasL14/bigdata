@@ -10,5 +10,5 @@ COPY . .
 
 EXPOSE 8080
 
-CMD ["python","flask","run","app.py","--host","0.0.0.0"]
+CMD ["python","flask","run","app.py","--host","0.0.0.0", "$PORT"]
 
