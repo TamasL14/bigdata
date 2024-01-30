@@ -33,6 +33,6 @@ jobs:
         -   name: Build and Push the docker image
             run: |
                 gcloud auth configure-docker europe-west3-docker.pkg.dev --quiet
-                docker build -t europe-west3-docker.pkg.dev/$PROJECT_ID/images/$IMAGE_NAME:latest --build-arg DEV_MODE=False .
+                docker buildx build --platform linux/amd64 -t europe-west3-docker.pkg.dev/$PROJECT_ID/images/$IMAGE_NAME:latest --build-arg DEV_MODE=False .
                 docker push europe-west3-docker.pkg.dev/$PROJECT_ID/images/$IMAGE_NAME:latest
                 gcloud run services update app --image europe-west3-docker.pkg.dev/$PROJECT_ID/images/$IMAGE_NAME:latest --region europe-west3
