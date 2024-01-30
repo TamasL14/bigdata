@@ -1,16 +1,13 @@
-FROM python:3.10-slim
-
-ARG DEV_MODE=True
-ENV DEV_MODE ${DEV_MODE}
-ENV TEST_MODE False
+FROM python:3.10-slim-buster
 
 WORKDIR /app
 
-COPY ./requirements.txt /app/
+COPY requirements.txt requirements.txt 
 
 RUN pip install -r requirements.txt
 
-COPY . /app/
+COPY /app/ .
 
-CMD ["python", "app.app", "--host", "0.0.0.0", "--port", "8080"]
+EXPOSE 8080
 
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080"]
