@@ -1,22 +1,50 @@
 from fastapi import FastAPI
-from pymongo import MongoClient
 import os
-from dotenv import load_dotenv
+from app.database import crud
 
 app = FastAPI()
 
-load_dotenv()
-
-DB_USERNAME = os.getenv('DB_USERNAME')
-DB_PASSWORD = os.getenv('DB_PASSWORD')
-MONGO_URL = "mongodb+srv://${DB_USERNAME}:${DB_PASSWORD}@rosentestdata.ky0vl7x.mongodb.net/?retryWrites=true&w=majority"
-client = MongoClient(MONGO_URL)
+@app.on_event("startup")
+async def on_startup():
+    await crud.connect()
 
 @app.get("/health")
 async def health_check():
-    try:
-        # Check if connection to MongoDB is established
-        client["your_database"].collection.insert_one({"message": "Connected to MongoDB"})
-        return {"message": "Connection successful"}
-    except Exception as e:
-        return {"message": "Connection failed: {}".format(e)}
+    return await crud.health_check()
+
+@app.get("/")
+async def get_data():
+    return await crud.get_data()
+
+@app.post("/")
+async def post_data():
+    return await crud.post_data()
+
+@app.delete("/")
+async def delete_data():
+    return await crud.delete_data()
+
+@app.put("/")
+async def update_data():
+    return await crud.update_data()
+
+@app.patch("/")
+async def patch_data():
+    return await crud.patch_data()
+
+@app.get("/{id}")
+async def get_data_by_id(id: str):
+    return await crud.get_data_by_id(id)
+
+@app.post("/{id}")
+async def post_data_by_id(id: str):
+    return await crud.post_data_by_id(id)
+
+@app.delete("/{id}")
+async def delete_data_by_id(id: str):
+    return await crud.delete_data_by_id(id)
+
+@app.put("/{id}")
+async def update_data_by_id(id: str):
+    return await crud.update_data_by_id(id)
+
