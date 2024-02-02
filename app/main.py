@@ -1,15 +1,12 @@
 from fastapi import FastAPI
-import os
 from app.database import crud
 
 app = FastAPI()
 
+@app.lifespan("startup")
+async def startup_event():
+    await crud.connect_to_mongo()
 
-@app.get("/health")
-async def health_check():
-    return await crud.health_check()
-
-"""
 @app.get("/")
 async def get_data():
     return await crud.get_data()
@@ -46,4 +43,7 @@ async def delete_data_by_id(id: str):
 async def update_data_by_id(id: str):
     return await crud.update_data_by_id(id)
 
-"""
+@app.get("/health")
+async def health_check():
+    return await crud.health_check()
+
