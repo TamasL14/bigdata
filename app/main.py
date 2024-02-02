@@ -4,14 +4,12 @@ from app.database import crud
 
 app = FastAPI()
 
-@app.on_event("startup")
-async def on_startup():
-    await crud.connect()
 
 @app.get("/health")
 async def health_check():
     return await crud.health_check()
 
+"""
 @app.get("/")
 async def get_data():
     return await crud.get_data()
@@ -48,3 +46,4 @@ async def delete_data_by_id(id: str):
 async def update_data_by_id(id: str):
     return await crud.update_data_by_id(id)
 
+"""
