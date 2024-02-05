@@ -5,7 +5,7 @@ from pymongo import MongoClient
 import os
 from dotenv import load_dotenv
 from data_prep import convert_h5_to_json
-from pathlib import Path
+from pathlib2 import Path
 
 app = FastAPI()
 load_dotenv()
