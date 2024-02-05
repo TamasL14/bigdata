@@ -28,7 +28,7 @@ app.add_middleware(
 
 username = "dbUserBigData"
 passwort = "Test123123Test"
-MONGO_URL = "mongodb+srv://dbUserBigData:{passwort}@rosentestdata.ky0vl7x.mongodb.net/?retryWrites=true&w=majority"
+MONGO_URL = "mongodb+srv://dbUserBigData:Test123123Test@rosentestdata.ky0vl7x.mongodb.net/?retryWrites=true&w=majority"
 client = MongoClient(MONGO_URL)
 db = client["bigdata"]
 collection = db["Sensordaten"]
