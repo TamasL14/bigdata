@@ -2,7 +2,7 @@ name: Build and Push Python Image into GCP
 
 on:
     push:
-        branches: [main]
+        branches: [developer]
 jobs:
     deploy:
         name: Build and Push to GCP
