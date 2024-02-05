@@ -25,8 +25,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-username = "dbUserBigData"
-passwort = "Test123123Test"
+username = os.getenv("DB_USERNAME")
+passwort = os.getenv("DB_PASSWORD")
 MONGO_URL = "mongodb+srv://{}:{}@rosentestdata.ky0vl7x.mongodb.net/?retryWrites=true&w=majority".format(
     username, passwort
 )
@@ -48,7 +48,7 @@ async def health_check():
 
 def process_file(filename):
     # Convert data
-    file_path = f"/tmp/uploads/{filename}.h5"
+    file_path = f"./temp/{filename}"
     if os.path.exists(file_path):
         converted_data = convert_h5_to_json(filename)
         # Insert data into MongoDB
@@ -64,7 +64,7 @@ async def upload_and_convert(file: UploadFile = None, folder: UploadFile = None)
         # Handle missing input error
         return {"error": "No file or folder uploaded"}
     elif file is not None:
-        file_path = f"/tmp/uploads/{file.filename}"
+        file_path = f"./temp/{file.filename}"
         with open(file_path, "wb") as f:
             await file.read(into=f)
         try:
@@ -73,14 +73,14 @@ async def upload_and_convert(file: UploadFile = None, folder: UploadFile = None)
             print(f"Error processing {file.filename}: {e}")  
 
     elif folder is not None:
-        folder_path = f"/tmp/uploads/{folder.filename}"
+        folder_path = f"./temp/uploads/{folder.filename}"
         # Iterate through files in the folder
         if folder.content_type == "application/zip":  # Assuming folder is zipped
             with zipfile.ZipFile(folder.file) as zip_ref:
                 zip_ref.extractall("./temp")  # Extract folder contents temporarily
                 folder_path = "./temp"
         else:
-            folder_path = f"/tmp/uploads/{folder.filename}"
+            folder_path = f"./temp/{folder.filename}"
 
         try:
             for filename in os.listdir(folder_path):
