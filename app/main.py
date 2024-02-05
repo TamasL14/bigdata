@@ -4,7 +4,7 @@ from fastapi import FastAPI, UploadFile, File
 from pymongo import MongoClient
 import os
 from dotenv import load_dotenv
-from app.data_prep import convert_h5_to_json
+from data_prep import convert_h5_to_json
 
 app = FastAPI()
 load_dotenv()
