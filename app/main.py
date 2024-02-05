@@ -1,7 +1,7 @@
 import shutil
 import zipfile
 from fastapi import FastAPI, UploadFile
-from pymongo import MongoClient
+from pymongo.mongo_client import MongoClient
 import pymongo
 import os
 from dotenv import load_dotenv
@@ -27,8 +27,8 @@ app.add_middleware(
 )
 
 DB_USERNAME = "dbUserBigData"
-DB_PASSWORD = "Aa017jHP0ZuWv4Z2"
-MONGO_URL = "mongodb+srv://${DB_USERNAME}:${DB_PASSWORD}@rosentestdata.ky0vl7x.mongodb.net/?retryWrites=true&w=majority+&ssl=true&ssl_cert_reqs=CERT_NONE"
+DB_PASSWORD = "Test123123Test"
+MONGO_URL = "mongodb+srv://dbUserBigData:${DB_PASSWORD}@rosentestdata.ky0vl7x.mongodb.net/?retryWrites=true&w=majority"
 client = MongoClient(MONGO_URL)
 db = client["bigdata"]
 collection = db["Sensordaten"]
@@ -106,6 +106,11 @@ async def upload_and_convert(file: UploadFile = None, folder: UploadFile = None)
 
 @app.get("/data")
 async def get_data():
+    try:
+        client.admin.command('ping')
+        print("Pinged your deployment. You successfully connected to MongoDB!")
+    except Exception as e:
+        print(e)
     try:
         indexes=await collection.list_indexes()
         for index in indexes:
