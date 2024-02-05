@@ -5,6 +5,8 @@ from pymongo import MongoClient
 import os
 from dotenv import load_dotenv
 from data_prep import convert_h5_to_json
+import magic
+from magic import detect_from_filename
 
 app = FastAPI()
 load_dotenv()
@@ -20,8 +22,6 @@ collection = db["Sensordaten"]
 async def root():
     return {"message": "Hello World"}
 
-
-
 @app.get("/health")
 async def health_check():
     try:
@@ -29,6 +29,11 @@ async def health_check():
         return {"message": "Connection successful"}
     except Exception as e:
         return {"message": "Connection failed: {}".format(e)}
+    
+def is_folder(filename):
+    # Use magic library to detect folder
+    mime_type = detect_from_filename(filename)
+    return mime_type == "directory"
 
 def process_file(filename):
     # Convert data
@@ -66,6 +71,43 @@ async def upload_and_convert(folder: UploadFile):
         # Optionally delete temporary folder
         if os.path.exists(folder_path):
             shutil.rmtree(folder_path)
+
+async def upload_and_convert(folder: UploadFile):
+    if is_folder(folder.filename):
+        folder_path = folder.filename
+        # Iterate through files in the folder
+        if folder.content_type == "application/zip":  # Assuming folder is zipped
+            with zipfile.ZipFile(folder.file) as zip_ref:
+                zip_ref.extractall("./temp")  # Extract folder contents temporarily
+                folder_path = "./temp"
+        else:
+            folder_path = folder.filename
+
+        try:
+            for filename in os.listdir(folder_path):
+                if os.path.isfile(os.path.join(folder_path, filename)):
+                    # Read file data
+                    with open(os.path.join(folder_path, filename), "rb") as f:
+                        data = f.read()
+                    # Process and store data
+                    if not process_file(filename):
+                        raise Exception(f"Failed to process {filename}")
+            return {"message": "Files uploaded and converted successfully"}
+        except Exception as e:
+            return {"error": str(e)}
+        finally:
+            # Optionally delete temporary folder
+            if os.path.exists(folder_path):
+                shutil.rmtree(folder_path)             
+    else:
+        with folder.file as f:
+            data = f.read()
+        try:
+            process_file(folder.filename)
+        except Exception as e:
+            print(f"Error processing {folder.filename}: {e}")
+
+    return {"message": "Files uploaded and processed successfully"}
 
 @app.get("/data")
 async def get_data():
