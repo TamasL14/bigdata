@@ -65,7 +65,7 @@ async def upload_and_convert(file: UploadFile = None):
 
     if file is not None:
         filename=file.filename
-        with file.filename as f:
+        with filename as f:
             data = f.read()
         return {"filename": filename, "data": data}
         await process_file(file.filename)     
