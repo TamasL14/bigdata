@@ -45,7 +45,7 @@ async def health_check():
         collections = db.list_collection_names()
         return {"message": collections}
     except Exception as e:
-        return {"message": "Connection failed: {}".format(e)}
+        return {"message": "Connection failed: {}".format(e), "Access": "${DB_USERNAME}, ${DB_PASSWORD}"}
     
 def is_folder(filename):
     # Use pathlib library to detect folder
