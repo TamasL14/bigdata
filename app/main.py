@@ -61,7 +61,7 @@ async def upload_and_convert(file: UploadFile = None, folder: UploadFile = None)
         return {"error": "No file or folder uploaded"}
     elif file is not None:
         file_path = f"./temp/{file.filename}"
-        full_file_path = os.path.join(file_path, file)  # Construct full path
+        full_file_path = os.path.join(file_path, file.filename)  # Construct full path
         with h5py.File(full_file_path, 'r') as f:
             data = f['data']
         try:
