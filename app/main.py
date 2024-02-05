@@ -105,5 +105,6 @@ async def upload_and_convert(file: UploadFile = None, folder: UploadFile = None)
 
 @app.get("/data")
 async def get_data():
-    data=collection.list_indexes()
-    return data
+    indexes=collection.list_indexes()
+    for index in indexes:
+        return("Index name:", index["name"])
