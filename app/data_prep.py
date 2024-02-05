@@ -34,9 +34,9 @@ class CustomEncoder(json.JSONEncoder):
             return obj.decode("utf-8")
         return super().default(obj)
 
-def convert_h5_to_json(file_path):
+def convert_h5_to_json(h5file_path):
     """Convert a HDF5 file to a JSON file."""
-    with h5py.File(file_path, 'r') as f:
+    with h5py.File(h5file_path, 'r') as f:
         data = f['data']
 
         json_data = {}
@@ -58,5 +58,6 @@ def convert_h5_to_json(file_path):
                 json_data[name] = convert_dataset_to_list(obj)
 
         # Write JSON data to file
-        json.dump(json_data, f, cls=CustomEncoder)
-    return json_data
+        with open() as f:
+            json.dump(json_data, f, cls=CustomEncoder)
+        return json_data

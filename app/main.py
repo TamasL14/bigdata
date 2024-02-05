@@ -7,6 +7,7 @@ import os
 from dotenv import load_dotenv
 from data_prep import convert_h5_to_json
 from fastapi.middleware.cors import CORSMiddleware
+import h5py
 
 app = FastAPI()
 load_dotenv()
@@ -46,17 +47,12 @@ async def health_check():
     except Exception as e:
         return {"message": "Connection failed: {}".format(e)}
 
-def process_file(filename):
-    # Convert data
-    file_path = f"./temp/{filename}"
-    if os.path.exists(file_path):
-        converted_data = convert_h5_to_json(filename)
+def process_file(full_file_path):
+        converted_data = convert_h5_to_json(full_file_path)
         # Insert data into MongoDB
         collection.insert_one(converted_data)
         return converted_data
-    else:
-        print(f"Error processing {filename}: {e}")
-        return False
+
 
 @app.post("/upload")
 async def upload_and_convert(file: UploadFile = None, folder: UploadFile = None):
@@ -65,10 +61,11 @@ async def upload_and_convert(file: UploadFile = None, folder: UploadFile = None)
         return {"error": "No file or folder uploaded"}
     elif file is not None:
         file_path = f"./temp/{file.filename}"
-        with open(file_path, "wb") as f:
-            await file.read()
+        full_file_path = os.path.join(file_path, file)  # Construct full path
+        with h5py.File(full_file_path, 'r') as f:
+            data = f['data']
         try:
-            process_file(file.filename)
+            process_file(full_file_path)
         except Exception as e:
             print(f"Error processing {file.filename}: {e}")  
 
