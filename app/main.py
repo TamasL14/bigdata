@@ -1,8 +1,8 @@
 import shutil
 import zipfile
 from fastapi import FastAPI, UploadFile
-from pymongo.mongo_client import MongoClient
 import pymongo
+from pymongo.mongo_client import MongoClient
 import os
 from dotenv import load_dotenv
 from data_prep import convert_h5_to_json
@@ -106,11 +106,6 @@ async def upload_and_convert(file: UploadFile = None, folder: UploadFile = None)
 
 @app.get("/data")
 async def get_data():
-    try:
-        client.admin.command('ping')
-        print("Pinged your deployment. You successfully connected to MongoDB!")
-    except Exception as e:
-        print(e)
     try:
         indexes=await collection.list_indexes()
         for index in indexes:
