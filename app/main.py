@@ -26,8 +26,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-DB_USERNAME = os.getenv('DB_USERNAME')
-DB_PASSWORD = os.getenv('DB_PASSWORD')
+DB_USERNAME = "dbUserBigData"
+DB_PASSWORD = "Aa017jHP0ZuWv4Z2"
 MONGO_URL = "mongodb+srv://${DB_USERNAME}:${DB_PASSWORD}@rosentestdata.ky0vl7x.mongodb.net/?retryWrites=true&w=majority+&ssl=true&ssl_cert_reqs=CERT_NONE"
 client = MongoClient(MONGO_URL)
 db = client["bigdata"]
