@@ -69,8 +69,6 @@ async def upload_and_convert(file: UploadFile = None, folder: UploadFile = None)
         return {"error": "No file or folder uploaded"}
     elif file is not None:
         filename=file.filename
-        with open(file.filename) as f:
-            data = f.read()
         try:
             process_file(file.filename)
         except Exception as e:
