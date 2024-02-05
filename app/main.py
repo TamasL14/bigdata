@@ -38,8 +38,8 @@ def process_file(filename):
     try:
         converted_data = convert_h5_to_json(filename)
         # Insert data into MongoDB
-        collection.insert_one(converted_data)
-        return True
+        #collection.insert_one(converted_data)
+        return converted_data
     except Exception as e:
         print(f"Error processing {filename}: {e}")
         return False
