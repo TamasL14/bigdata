@@ -6,7 +6,6 @@ from pymongo import MongoClient
 import os
 from dotenv import load_dotenv
 from data_prep import convert_h5_to_json
-from pathlib2 import Path
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
@@ -46,19 +45,16 @@ async def health_check():
         return {"message": "Connection successful"}
     except Exception as e:
         return {"message": "Connection failed: {}".format(e)}
-    
-def is_folder(filename):
-    # Use pathlib library to detect folder
-    return Path(filename).is_dir()
 
 def process_file(filename):
     # Convert data
-    try:
+    file_path = f"/tmp/uploads/{filename}.h5"
+    if os.path.exists(file_path):
         converted_data = convert_h5_to_json(filename)
         # Insert data into MongoDB
         collection.insert_one(converted_data)
         return converted_data
-    except Exception as e:
+    else:
         print(f"Error processing {filename}: {e}")
         return False
 
@@ -68,21 +64,23 @@ async def upload_and_convert(file: UploadFile = None, folder: UploadFile = None)
         # Handle missing input error
         return {"error": "No file or folder uploaded"}
     elif file is not None:
-        filename=file.filename
+        file_path = f"/tmp/uploads/{file.filename}.h5"
+        with open(file_path, "wb") as f:
+            await file.read(into=f)
         try:
             process_file(file.filename)
         except Exception as e:
-            print(f"Error processing {folder.filename}: {e}")  
+            print(f"Error processing {file.filename}: {e}")  
 
     elif folder is not None:
-        folder_path = folder.filename
+        folder_path = f"/tmp/uploads/{folder.filename}"
         # Iterate through files in the folder
         if folder.content_type == "application/zip":  # Assuming folder is zipped
             with zipfile.ZipFile(folder.file) as zip_ref:
                 zip_ref.extractall("./temp")  # Extract folder contents temporarily
                 folder_path = "./temp"
         else:
-            folder_path = folder.filename
+            folder_path = f"/tmp/uploads/{folder.filename}"
 
         try:
             for filename in os.listdir(folder_path):
