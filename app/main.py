@@ -41,6 +41,8 @@ async def root():
 async def health_check():
     try:
         client = MongoClient(MONGO_URL)
+        db = client["bigdata"]
+        collection = db["Sensordaten"]
         return {"message": "Connection successful"}
     except Exception as e:
         return {"message": "Connection failed: {}".format(e)}
@@ -105,7 +107,7 @@ async def upload_and_convert(file: UploadFile = None, folder: UploadFile = None)
         return {"error": "Invalid file or folder combination"}
 
 @app.get("/data")
-async def get_data():
+async def get_data(collection):
     indexes=await collection.list_indexes()
     for index in indexes:
         return("Index name:", index["name"])
