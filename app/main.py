@@ -38,7 +38,7 @@ async def root():
     return {"message": "Hello World"}
 
 @app.get("/health")
-async def health_check(DB_USERNAME):
+async def health_check():
     try:
         client = MongoClient(MONGO_URL)
         db = client["bigdata"]
