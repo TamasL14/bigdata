@@ -5,7 +5,6 @@ from pymongo import MongoClient
 import os
 from dotenv import load_dotenv
 from data_prep import convert_h5_to_json
-import magic
 from magic import detect_from_filename
 
 app = FastAPI()
