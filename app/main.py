@@ -69,37 +69,8 @@ async def upload_and_convert(file: UploadFile = None, folder: UploadFile = None)
         filename=file.filename
         with file.filename as f:
             data = f.read()
-        try:
-            process_file(file.filename)
-        except Exception as e:
-            print(f"Error processing {folder.filename}: {e}")  
 
-    elif folder is not None:
-        folder_path = folder.filename
-        # Iterate through files in the folder
-        if folder.content_type == "application/zip":  # Assuming folder is zipped
-            with zipfile.ZipFile(folder.file) as zip_ref:
-                zip_ref.extractall("./temp")  # Extract folder contents temporarily
-                folder_path = "./temp"
-        else:
-            folder_path = folder.filename
-
-        try:
-            for filename in os.listdir(folder_path):
-                if os.path.isfile(os.path.join(folder_path, filename)):
-                    # Read file data
-                    with open(os.path.join(folder_path, filename), "rb") as f:
-                        data = f.read()
-                    # Process and store data
-                    if not process_file(filename):
-                        raise Exception(f"Failed to process {filename}")
-            return {"message": "Files uploaded and converted successfully"}
-        except Exception as e:
-            return {"error": str(e)}
-        finally:
-            # Optionally delete temporary folder
-            if os.path.exists(folder_path):
-                shutil.rmtree(folder_path)             
+        await process_file(file.filename)     
     else:
         # Handle unexpected input combination
         return {"error": "Invalid file or folder combination"}
