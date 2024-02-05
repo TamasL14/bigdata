@@ -61,15 +61,13 @@ def process_file(filename):
         return False
 
 @app.post("/upload")
-async def upload_and_convert(file: UploadFile = None, folder: UploadFile = None):
-    if file is None and folder is None:
-        # Handle missing input error
-        return {"error": "No file or folder uploaded"}
-    elif file is not None:
+async def upload_and_convert(file: UploadFile = None):
+
+    if file is not None:
         filename=file.filename
         with file.filename as f:
             data = f.read()
-
+        return {"filename": filename, "data": data}
         await process_file(file.filename)     
     else:
         # Handle unexpected input combination
