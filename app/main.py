@@ -2,7 +2,7 @@ import shutil
 import zipfile
 from fastapi import FastAPI, UploadFile
 import pymongo
-from pymongo.mongo_client import MongoClient
+from pymongo import MongoClient
 import os
 from dotenv import load_dotenv
 from data_prep import convert_h5_to_json
