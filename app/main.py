@@ -38,14 +38,14 @@ async def root():
     return {"message": "Hello World"}
 
 @app.get("/health")
-async def health_check(DB_USERNAME, DB_PASSWORD):
+async def health_check():
     try:
         client = MongoClient(MONGO_URL)
         db = client["bigdata"]
         collections = db.list_collection_names()
         return {"message": collections}
     except Exception as e:
-        return {"message": "Connection failed: {}".format(e), "Access": "${DB_USERNAME}, ${DB_PASSWORD}"}
+        return {"message": "Connection failed: {}".format(e), "Access": DB_USERNAME, DB_PASSWORD}
     
 def is_folder(filename):
     # Use pathlib library to detect folder
