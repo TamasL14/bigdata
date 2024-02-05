@@ -43,9 +43,9 @@ async def health_check():
         client = MongoClient(MONGO_URL)
         db = client["bigdata"]
         collections = db.list_collection_names()
-        return {"message": collections}
+        return {"message": DB_USERNAME}
     except Exception as e:
-        return {"message": "Connection failed: {}".format(e), "message": DB_USERNAME, "message": DB_PASSWORD}
+        return {"message": DB_USERNAME}
     
 def is_folder(filename):
     # Use pathlib library to detect folder
