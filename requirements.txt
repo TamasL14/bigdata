@@ -4,3 +4,9 @@ pydantic~=2.3.0
 dnspython
 pymongo
 python-dotenv
+h5py
+json
+base64
+numpy
+shutil
+zipfile
