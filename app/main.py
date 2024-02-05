@@ -1,14 +1,29 @@
 import shutil
 import zipfile
-from fastapi import FastAPI, UploadFile, File
+from fastapi import FastAPI, UploadFile
 from pymongo import MongoClient
 import os
 from dotenv import load_dotenv
 from data_prep import convert_h5_to_json
 from pathlib2 import Path
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 load_dotenv()
+
+origins = [
+    "http://localhost",
+    "https://localhost",
+    "https://bigdata-testing123.firebaseapp.com",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 DB_USERNAME = os.getenv('DB_USERNAME')
 DB_PASSWORD = os.getenv('DB_PASSWORD')
