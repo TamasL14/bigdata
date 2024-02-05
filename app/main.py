@@ -46,31 +46,6 @@ def process_file(filename):
 
 @app.get("/upload")
 async def upload_and_convert(folder: UploadFile):
-    if folder.content_type == "application/zip":  # Assuming folder is zipped
-        with zipfile.ZipFile(folder.file) as zip_ref:
-            zip_ref.extractall("./temp")  # Extract folder contents temporarily
-            folder_path = "./temp"
-    else:
-        folder_path = folder.filename
-
-    try:
-        for filename in os.listdir(folder_path):
-            if os.path.isfile(os.path.join(folder_path, filename)):
-                # Read file data
-                with open(os.path.join(folder_path, filename), "rb") as f:
-                    data = f.read()
-                # Process and store data
-                if not process_file(filename):
-                    raise Exception(f"Failed to process {filename}")
-        return {"message": "Files uploaded and converted successfully"}
-    except Exception as e:
-        return {"error": str(e)}
-    finally:
-        # Optionally delete temporary folder
-        if os.path.exists(folder_path):
-            shutil.rmtree(folder_path)
-
-async def upload_and_convert(folder: UploadFile):
     if is_folder(folder.filename):
         folder_path = folder.filename
         # Iterate through files in the folder
