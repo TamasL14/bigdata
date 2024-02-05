@@ -45,8 +45,20 @@ def process_file(filename):
         return False
 
 @app.get("/upload")
-async def upload_and_convert(folder: UploadFile):
-    if is_folder(folder.filename):
+async def upload_and_convert(file: UploadFile = None, folder: UploadFile = None):
+    if file is None and folder is None:
+        # Handle missing input error
+        return {"error": "No file or folder uploaded"}
+    elif file is not None:
+        filename=file.filename
+        with file.filename as f:
+            data = f.read()
+        try:
+            process_file(file.filename)
+        except Exception as e:
+            print(f"Error processing {folder.filename}: {e}")  
+
+    elif folder is not None:
         folder_path = folder.filename
         # Iterate through files in the folder
         if folder.content_type == "application/zip":  # Assuming folder is zipped
@@ -73,16 +85,10 @@ async def upload_and_convert(folder: UploadFile):
             if os.path.exists(folder_path):
                 shutil.rmtree(folder_path)             
     else:
-        with folder.file as f:
-            data = f.read()
-        try:
-            process_file(folder.filename)
-        except Exception as e:
-            print(f"Error processing {folder.filename}: {e}")
-
-    return {"message": "Files uploaded and processed successfully"}
+        # Handle unexpected input combination
+        return {"error": "Invalid file or folder combination"}
 
 @app.get("/data")
 async def get_data():
-    data = collection.find_one()
+    data=collection.find_one(id=0)
     return data
