@@ -105,7 +105,7 @@ async def upload_and_convert(file: UploadFile = None, folder: UploadFile = None)
         return {"error": "Invalid file or folder combination"}
 
 @app.get("/data")
-async def get_data(collection):
+async def get_data():
     try:
         indexes=await collection.list_indexes()
         for index in indexes:
