@@ -26,9 +26,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-DB_USERNAME = "dbUserBigData"
-DB_PASSWORD = "Test123123Test"
-MONGO_URL = "mongodb+srv://dbUserBigData:Test123123Test@rosentestdata.ky0vl7x.mongodb.net/?retryWrites=true&w=majority"
+username = "dbUserBigData"
+passwort = "Test123123Test"
+MONGO_URL = "mongodb+srv://dbUserBigData:{passwort}@rosentestdata.ky0vl7x.mongodb.net/?retryWrites=true&w=majority"
 client = MongoClient(MONGO_URL)
 db = client["bigdata"]
 collection = db["Sensordaten"]
@@ -107,7 +107,7 @@ async def upload_and_convert(file: UploadFile = None, folder: UploadFile = None)
 @app.get("/data")
 async def get_data():
     try:
-        indexes=await collection.list_indexes()
+        indexes = collection.list_indexes()
         for index in indexes:
             return("Index name:", index["name"])
     except Exception as e:
