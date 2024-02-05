@@ -90,5 +90,5 @@ async def upload_and_convert(file: UploadFile = None, folder: UploadFile = None)
 
 @app.get("/data")
 async def get_data():
-    data=collection.find_one(id=0)
+    data=collection.list_indexes()
     return data
