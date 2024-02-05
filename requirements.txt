@@ -7,5 +7,5 @@ python-dotenv
 h5py
 numpy
 python-multipart
-python-magic
+python-magic==0.4.15
 libmagic
