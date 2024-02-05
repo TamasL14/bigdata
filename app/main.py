@@ -38,14 +38,14 @@ async def root():
     return {"message": "Hello World"}
 
 @app.get("/health")
-async def health_check():
+async def health_check(DB_USERNAME):
     try:
         client = MongoClient(MONGO_URL)
         db = client["bigdata"]
         collections = db.list_collection_names()
-        return {"message": DB_USERNAME}
+        return {"message": "${DB_USERNAME}"}
     except Exception as e:
-        return {"message": DB_USERNAME}
+        return {"message": "${DB_USERNAME}"}
     
 def is_folder(filename):
     # Use pathlib library to detect folder
