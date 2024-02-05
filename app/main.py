@@ -48,10 +48,13 @@ async def health_check():
         return {"message": "Connection failed: {}".format(e)}
 
 def process_file(full_file_path):
+    try:
         converted_data = convert_h5_to_json(full_file_path)
         # Insert data into MongoDB
         collection.insert_one(converted_data)
-        return converted_data
+        return True
+    except Exception as e:
+        return False
 
 
 @app.post("/upload")
@@ -65,7 +68,7 @@ async def upload_and_convert(file: UploadFile = None, folder: UploadFile = None)
         with h5py.File(full_file_path, 'r') as f:
             data = f['data']
         try:
-            process_file(full_file_path)
+            await process_file(full_file_path)
         except Exception as e:
             print(f"Error processing {file.filename}: {e}")  
 
