@@ -54,7 +54,7 @@ def process_file(filename):
     try:
         converted_data = convert_h5_to_json(filename)
         # Insert data into MongoDB
-        #collection.insert_one(converted_data)
+        collection.insert_one(converted_data)
         return converted_data
     except Exception as e:
         print(f"Error processing {filename}: {e}")
@@ -106,6 +106,6 @@ async def upload_and_convert(file: UploadFile = None, folder: UploadFile = None)
 
 @app.get("/data")
 async def get_data():
-    indexes=collection.list_indexes()
+    indexes=await collection.list_indexes()
     for index in indexes:
         return("Index name:", index["name"])
