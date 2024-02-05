@@ -66,7 +66,7 @@ async def upload_and_convert(file: UploadFile = None, folder: UploadFile = None)
     elif file is not None:
         file_path = f"./temp/{file.filename}"
         with open(file_path, "wb") as f:
-            await file.read(into=f)
+            await file.read()
         try:
             process_file(file.filename)
         except Exception as e:
