@@ -6,3 +6,4 @@ pymongo
 python-dotenv
 h5py
 numpy
+python-multipart
