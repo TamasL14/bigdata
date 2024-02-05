@@ -5,7 +5,7 @@ from pymongo import MongoClient
 import os
 from dotenv import load_dotenv
 from data_prep import convert_h5_to_json
-from magic import detect_from_filename
+from pathlib import Path
 
 app = FastAPI()
 load_dotenv()
@@ -30,9 +30,8 @@ async def health_check():
         return {"message": "Connection failed: {}".format(e)}
     
 def is_folder(filename):
-    # Use magic library to detect folder
-    mime_type = detect_from_filename(filename)
-    return mime_type == "directory"
+    # Use pathlib library to detect folder
+    return Path(filename).is_dir()
 
 def process_file(filename):
     # Convert data
