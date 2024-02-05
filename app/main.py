@@ -44,7 +44,7 @@ def process_file(filename):
         print(f"Error processing {filename}: {e}")
         return False
 
-@app.post("/upload")
+@app.get("/upload")
 async def upload_and_convert(folder: UploadFile):
     if is_folder(folder.filename):
         folder_path = folder.filename
