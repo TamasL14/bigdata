@@ -64,7 +64,7 @@ async def upload_and_convert(file: UploadFile = None, folder: UploadFile = None)
         # Handle missing input error
         return {"error": "No file or folder uploaded"}
     elif file is not None:
-        file_path = f"/tmp/uploads/{file.filename}.h5"
+        file_path = f"/tmp/uploads/{file.filename}"
         with open(file_path, "wb") as f:
             await file.read(into=f)
         try:
